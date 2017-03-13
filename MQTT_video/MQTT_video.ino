@@ -1,16 +1,28 @@
 #include <ESP8266WiFi.h>
 #include <AsyncMqttClient.h>
+
+# define useCredentialsFile
+
+
+#ifdef useCredentialsFile
 #include <credentials.h>
-#include "configuration.h"
+#else
+mySSID = "    ";
+myPASSWORD = "   ";
+#endif
+
 
 AsyncMqttClient mqttClient;
 
 #define RELAY_PIN D7
 
+#define boardName "testBoard"
+
 #define MQTT_RELAY1_TOPIC     "/LAB/LIGHT/MAIN/SWITCH"
 #define MQTT_RELAY2_TOPIC     "/LAB/LIGHT/BENCH"
 #define MQTT_FEEDBACK1_TOPIC  "/LAB/LIGHT/MAIN/FEEDBACK"
 #define MQTT_LASTWILL_TOPIC   "/LAB/LIGHT/lastwill"
+
 
 char* buildTopic(char* topic) {
   char* hi = "";
@@ -25,9 +37,9 @@ void setRelay(String command) {
 
 void onMqttConnect(bool sessionPresent) {
   Serial.println("** Connected to the broker **");
-  
+
   mqttClient.subscribe(MQTT_RELAY1_TOPIC, 1);
-  
+
   Serial.print("Subscribing : ");
   Serial.println(MQTT_RELAY1_TOPIC);
 }
@@ -95,7 +107,7 @@ void setup() {
   pinMode(RELAY_PIN, OUTPUT);
   digitalWrite(RELAY_PIN, LOW);
   WiFi.persistent(false);
-  
+
   WiFi.mode(WIFI_STA);
   Serial.print("Connecting to Wi-Fi");
   WiFi.begin(mySSID, myPASSWORD);
@@ -109,7 +121,7 @@ void setup() {
 
   mqttClient.onConnect(onMqttConnect);
   mqttClient.onDisconnect(onMqttDisconnect);
- // mqttClient.onSubscribe(onMqttSubscribe);
+  // mqttClient.onSubscribe(onMqttSubscribe);
   //  mqttClient.onUnsubscribe(onMqttUnsubscribe);
   mqttClient.onMessage(onMqttMessage);
   mqttClient.onPublish(onMqttPublish);
