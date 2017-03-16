@@ -16,19 +16,13 @@ AsyncMqttClient mqttClient;
 
 #define RELAY_PIN D7
 
-#define boardName "testBoard"
-
-#define MQTT_RELAY1_TOPIC     "/LAB/LIGHT/MAIN/SWITCH"
-#define MQTT_RELAY2_TOPIC     "/LAB/LIGHT/BENCH"
-#define MQTT_FEEDBACK1_TOPIC  "/LAB/LIGHT/MAIN/FEEDBACK"
-#define MQTT_LASTWILL_TOPIC   "/LAB/LIGHT/lastwill"
+#define MQTT_RELAY1_TOPIC     "LAB/LIGHT/MAIN/SWITCH"
+#define MQTT_RELAY2_TOPIC     "LAB/LIGHT/BENCH"
+#define MQTT_FEEDBACK1_TOPIC  "LAB/LIGHT/MAIN/FEEDBACK"
+#define MQTT_LASTWILL_TOPIC   "LAB/LIGHT/lastwill"
 
 
-char* buildTopic(char* topic) {
-  char* hi = "";
-  sprintf(hi, "/%s%s", boardName, topic);
-  return hi;
-}
+
 
 void setRelay(String command) {
   if (command == "ON") digitalWrite(RELAY_PIN, HIGH);
